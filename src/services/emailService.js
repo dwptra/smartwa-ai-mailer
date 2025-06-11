@@ -363,9 +363,11 @@ class EmailMonitor {
             'WARNING'
         ];
 
-        const allowedSenders = process.env.ALLOWED_SENDERS ?
-            process.env.ALLOWED_SENDERS.split(',').map(email => email.trim()) :
+        const allowedSenders = process.env.GMAIL_ALLOWED_SENDERS ?
+            process.env.GMAIL_ALLOWED_SENDERS.split(',').map(email => email.trim()) :
             [];
+
+        console.log('allowedSenders:', allowedSenders);
 
         const subject = parsedEmail.subject.toUpperCase(); // Convert ke uppercase untuk matching
         const fromEmail = parsedEmail.from.text.toLowerCase();
