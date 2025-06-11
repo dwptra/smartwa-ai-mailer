@@ -1,0 +1,32 @@
+{
+  "name": "whatsappbotv2",
+  "version": "1.0.0",
+  "main": "/src/app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@adiwajshing/keyed-db": "^0.2.4",
+    "@types/node": "^20.17.57",
+    "@whiskeysockets/baileys": "^6.7.18",
+    "@xenova/transformers": "^2.17.2",
+    "axios": "^1.9.0",
+    "dotenv": "^16.5.0",
+    "mailparser": "^3.7.3",
+    "node-imap": "^0.9.6",
+    "openai": "^5.1.0",
+    "pino": "^8.21.0",
+    "qrcode-terminal": "^0.12.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
+}
