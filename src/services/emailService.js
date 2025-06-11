@@ -18,7 +18,7 @@ class EmailMonitor {
         this.whatsappClient = whatsappClient;
         this.targetWhatsappNumber = config.whatsapp.targetNumber;
         this.monitoringStartTime = null;
-        
+
         // Folder untuk menyimpan attachment sementara
         this.tempAttachmentDir = path.join(__dirname, '../../temp/attachments');
         this.ensureTempDirectory();
@@ -36,10 +36,10 @@ class EmailMonitor {
     async testConnection() {
         return new Promise((resolve, reject) => {
             console.log('🔄 Testing email connection...');
-            
+
             this.imap.once('ready', () => {
                 console.log('✅ Successfully connected to email server!');
-                
+
                 this.imap.openBox('INBOX', false, (err, box) => {
                     if (err) {
                         console.error('❌ Error opening inbox:', err);
@@ -47,11 +47,11 @@ class EmailMonitor {
                         reject(err);
                         return;
                     }
-                    
+
                     console.log('✅ Successfully opened inbox');
                     console.log(`📫 Total emails: ${box.messages.total}`);
                     console.log(`📬 New emails: ${box.messages.new}`);
-                    
+
                     // Get latest 3 emails
                     if (box.messages.total > 0) {
                         const startSeq = Math.max(1, box.messages.total - 2);
@@ -102,7 +102,7 @@ class EmailMonitor {
         console.log('🚀 Starting email monitor...');
         this.monitoringStartTime = new Date(); // Set waktu start monitoring
         console.log('⏰ Monitoring started at:', this.monitoringStartTime.toLocaleString());
-        
+
         this.imap.connect();
 
         this.imap.once('ready', () => {
@@ -142,7 +142,7 @@ class EmailMonitor {
                     console.error('❌ Error searching for new emails:', err);
                     return;
                 }
-                
+
                 if (!results || results.length === 0) {
                     console.log('📭 No new emails found since monitoring started');
                     return;
@@ -214,7 +214,7 @@ class EmailMonitor {
             // Proses dan kirim attachment jika ada
             if (parsedEmail.attachments && parsedEmail.attachments.length > 0) {
                 console.log(`📎 Processing ${parsedEmail.attachments.length} attachment(s)...`);
-                
+
                 for (const attachment of parsedEmail.attachments) {
                     await this.processAndSendAttachment(attachment);
                 }
@@ -231,7 +231,7 @@ class EmailMonitor {
             // Validasi ukuran file (WhatsApp limit ~64MB, tapi kita batasi 16MB untuk aman)
             const maxSizeInMB = 16;
             const maxSizeInBytes = maxSizeInMB * 1024 * 1024;
-            
+
             if (attachment.size > maxSizeInBytes) {
                 console.log(`⚠️ Attachment "${attachment.filename}" terlalu besar (${(attachment.size / 1024 / 1024).toFixed(2)}MB), melewati...`);
                 await this.sendToWhatsapp(`⚠️ File "${attachment.filename}" terlalu besar untuk dikirim (${(attachment.size / 1024 / 1024).toFixed(2)}MB > ${maxSizeInMB}MB)`);
@@ -291,7 +291,7 @@ class EmailMonitor {
     // Method untuk menyiapkan media message berdasarkan tipe file
     async prepareMediaMessage(filePath, attachment) {
         const contentType = attachment.contentType.toLowerCase();
-        
+
         if (contentType.startsWith('image/')) {
             return {
                 image: { url: filePath },
@@ -333,9 +333,9 @@ class EmailMonitor {
     // Update format pesan untuk menyertakan info attachment
     formatEmailForWhatsapp(parsedEmail) {
         let message = `*📧 New Email Notification*\n\n` +
-                     `*From:* ${parsedEmail.from.text}\n` +
-                     `*Subject:* ${parsedEmail.subject}\n` +
-                     `*Date:* ${parsedEmail.date}\n`;
+            `*From:* ${parsedEmail.from.text}\n` +
+            `*Subject:* ${parsedEmail.subject}\n` +
+            `*Date:* ${parsedEmail.date}\n`;
 
         // Tambahkan info attachment jika ada
         if (parsedEmail.attachments && parsedEmail.attachments.length > 0) {
@@ -346,7 +346,7 @@ class EmailMonitor {
         }
 
         message += `-------------------\n` +
-                  `${parsedEmail.text ? parsedEmail.text.substring(0, 500) : 'No text content'}...`;
+            `${parsedEmail.text ? parsedEmail.text.substring(0, 500) : 'No text content'}...`;
 
         return message;
     }
@@ -355,28 +355,28 @@ class EmailMonitor {
         // Konfigurasi filter - bisa ditambah manual nantinya
         const allowedSubjects = [
             'NOTIFICATION',
-            'ALERT', 
+            'ALERT',
             'URGENT',
             'SYSTEM',
             'BACKUP',
             'ERROR',
             'WARNING'
         ];
-        
-        const allowedSenders = [
-            'deria3789@gmail.com'
-        ];
+
+        const allowedSenders = process.env.ALLOWED_SENDERS ?
+            process.env.ALLOWED_SENDERS.split(',').map(email => email.trim()) :
+            [];
 
         const subject = parsedEmail.subject.toUpperCase(); // Convert ke uppercase untuk matching
         const fromEmail = parsedEmail.from.text.toLowerCase();
-        
+
         // Check if subject contains any of the allowed keywords
-        const subjectMatch = allowedSubjects.some(keyword => 
+        const subjectMatch = allowedSubjects.some(keyword =>
             subject.includes(keyword)
         );
-        
+
         // Check if sender is from allowed email
-        const senderMatch = allowedSenders.some(email => 
+        const senderMatch = allowedSenders.some(email =>
             fromEmail.includes(email.toLowerCase())
         );
 
@@ -396,8 +396,8 @@ class EmailMonitor {
     async sendToWhatsapp(message) {
         try {
             console.log('📱 Sending to WhatsApp:', this.targetWhatsappNumber);
-            await this.whatsappClient.sendMessage(this.targetWhatsappNumber, { 
-                text: message 
+            await this.whatsappClient.sendMessage(this.targetWhatsappNumber, {
+                text: message
             });
             console.log('✅ Message sent to WhatsApp successfully');
         } catch (error) {

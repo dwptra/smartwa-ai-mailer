@@ -34,8 +34,8 @@ Bot WhatsApp pintar yang terintegrasi dengan AI (OpenAI GPT & Groq) dan sistem m
 
 1. **Clone repository**
 ```bash
-git clone <repository-url>
-cd WhatsappBotV2
+git clone https://github.com/dwptra/smartwa-ai-mailer.git
+cd 
 ```
 
 2. **Install dependencies**
@@ -50,20 +50,17 @@ cp .env.example .env
 
 Edit file `.env` dengan kredensial Anda:
 ```env
-OPENAI_API_KEY=your-openai-api-key
-GROQ_API_KEY=your-groq-api-key
-GMAIL_EMAIL=your-gmail@gmail.com
-GMAIL_PASSWORD=your-app-password
-GMAIL_NUMBER=628xxxxxxxxx
+OPENAI_API_KEY='your-openai-api-key'
+GROQ_API_KEY='your-groq-api-key'
+GMAIL_EMAIL='your-gmail@gmail.com'
+GMAIL_PASSWORD='your-app-password'
+GMAIL_NUMBER='628xxxxxxxxx'
+GMAIL_ALLOWED_SENDER='a@gmail.com, b@gmail.com'
 ```
 
 4. **Jalankan bot**
 ```bash
-# Development mode
-npm run dev
-
-# Production mode
-npm start
+npm run start
 ```
 
 5. **Scan QR Code**
@@ -106,10 +103,6 @@ const allowedSubjects = [
     'ALERT', 
     'URGENT',
     'SYSTEM'
-];
-
-const allowedSenders = [
-    'deria3789@gmail.com'
 ];
 ```
 
@@ -186,13 +179,14 @@ node src/services/emailService.js
 
 ## 📄 Environment Variables
 
-| Variable | Description | Required |
-|----------|-------------|----------|
-| `OPENAI_API_KEY` | OpenAI API Key | Optional |
-| `GROQ_API_KEY` | Groq AI API Key | Optional |
-| `GMAIL_EMAIL` | Gmail address | Required |
-| `GMAIL_PASSWORD` | Gmail App Password | Required |
-| `GMAIL_NUMBER` | WhatsApp target number | Required |
+| Variable           | Description                | Required  |
+|--------------------|---------------------------|-----------|
+| `OPENAI_API_KEY`   | OpenAI API Key            | Optional  |
+| `GROQ_API_KEY`     | Groq AI API Key           | Optional  |
+| `GMAIL_EMAIL`      | Gmail address             | Required  |
+| `GMAIL_PASSWORD`   | Gmail App Password        | Required  |
+| `GMAIL_NUMBER`     | WhatsApp target number    | Required  |
+| `GMAIL_ALLOWED_SENDER` | Allowed sender emails (comma separated) | Optional  |
 
 ## 🔐 Security
 
