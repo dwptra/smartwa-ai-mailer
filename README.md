@@ -35,7 +35,7 @@ Bot WhatsApp pintar yang terintegrasi dengan AI (OpenAI GPT & Groq) dan sistem m
 1. **Clone repository**
 ```bash
 git clone https://github.com/dwptra/smartwa-ai-mailer.git
-cd 
+cd smartwa-ai-mailer
 ```
 
 2. **Install dependencies**
